@@ -1,6 +1,7 @@
 <template>
   <div>
     <sidebar/> 
+    <items :items="items" v-if="items.length > 0" v-on:close="items = []"/>
     <section class="adminMainSection">
       <h1>HOME</h1>
 
@@ -35,7 +36,7 @@
                   </v-list-item-content>
 
                   <v-list-item-action class="mx-3">
-                      <v-btn class="text-white" color="rgb(243, 77, 77)">VIEW ITEMS<v-icon>mdi-cart</v-icon></v-btn>
+                      <v-btn class="text-white" color="rgb(243, 77, 77)" @click="viewItems(order.items)">VIEW ITEMS<v-icon>mdi-cart</v-icon></v-btn>
                   </v-list-item-action>
 
                   <v-list-item-action class="mx-3" v-if="!order.delivered">
@@ -63,10 +64,18 @@
 <script>
 
 import sidebar from '@/components/admin/sidebar.vue'
+import items from '@/components/admin/items'
 export default {
     middleware:['admin-auth'],
     components:{
-        sidebar
+        sidebar, items
+    },
+
+    data(){
+      return {
+        items:[]
+      }
+      
     },
 
     
@@ -111,6 +120,12 @@ export default {
         }
 
         this.loader = false
+      },
+
+
+      viewItems(items){
+        
+        this.items = items 
       }
       
     }
