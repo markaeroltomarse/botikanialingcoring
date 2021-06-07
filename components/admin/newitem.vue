@@ -65,6 +65,46 @@
                 label="Item Price"
               />
 
+              <hr>
+
+              <v-text-field 
+                outlined
+                dense
+                color="rgb(243, 77, 77)"
+                clearable
+                required
+                readonly
+                v-model="newitem.expirationDate"
+                label="Item Expiration date"
+              />
+
+              <v-date-picker
+                v-model="datepicker"
+                year-icon="mdi-calendar-blank"
+                prev-icon="mdi-skip-previous"
+                next-icon="mdi-skip-next"
+                color="error"
+                :min="today"
+                show-adjacent-months
+            ></v-date-picker>
+
+
+              
+
+              <v-text-field 
+                type="number"
+                outlined
+                min="0"
+                max="100"
+                dense
+                color="rgb(243, 77, 77)"
+                clearable
+                required
+                v-model="newitem.percentOff"
+                step=".01"
+                label="Item Percent Off"
+              />
+
 
               <div class="img" :style="`background-image:url('${imgDisplay}');`">
                   
@@ -95,6 +135,9 @@
 </template>
 
 <script>
+
+import moment from 'moment'
+
 export default {
     data(){
         return {
@@ -108,15 +151,25 @@ export default {
                 company:'',
                 
                 price:0,
+
+                expirationDate:'',
+                
+                percentOff:0,
             },
 
             imgDisplay:'',
 
             selectedFileimg:null,
 
-            loader:false
+            loader:false,
+
+            datepicker:null,
+
+            today:moment().format('YYYY-MM-DD')
         }
     },
+
+  
 
     methods:{
         async saveNewItem(){
@@ -178,13 +231,20 @@ export default {
                 this.loader = false
             })
         },
+    },
+
+    watch:{
+        datepicker(val){
+            this.newitem.expirationDate = val
+        }
     }
 }
 </script>
 
 <style scoped>
-   j .overlay {
+    .overlay {
         background-color: rgba(243, 77, 77, 0.363);
+        overflow-y:scroll;
     }
 
     .overlay > div {

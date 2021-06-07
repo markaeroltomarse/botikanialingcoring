@@ -30,7 +30,7 @@
 </template>
 
 <script>
-
+import moment from 'moment'
 import popular from '@/components/popular'
 import footering from '@/components/footer'
 export default {
@@ -52,14 +52,16 @@ export default {
     async fetchItems(){
            
         let res = await this.$axios.get('/admin/getitems')
-
-        this.preitems = res.data.items
+        let arr = res.data.items
+        arr = arr.filter(item => this.leftDays(item.expirationDate).isLeft)
+        this.preitems = arr
 
         for (const item of this.preitems) {
             item.selectedqty = 1
             item.image = await this.retrieveImg(item._id);
         }        
 
+       
         console.log('ITEMS', this.preitems)
 
         this.copyQTY()
@@ -68,6 +70,7 @@ export default {
     copyQTY(){
         this.qtycopy = []
         for (const item of this.preitems) {
+          
             this.qtycopy.push({_id:item._id, qty:item.qty})
         } 
 
@@ -86,6 +89,25 @@ export default {
         console.log(filename, res)
         return res
     },
+
+    leftDays(sched){
+
+        try{
+            var eventdate = moment([...sched.split('-').map(x=>+x)], 'YYYY-MM-DD');
+            var todaysdate = moment();
+            var result = eventdate.diff(todaysdate, 'days') > 0
+            
+            return {
+                lbl: result ? eventdate.diff(todaysdate, 'days') + " days left" : Math.abs(eventdate.diff(todaysdate, 'days')) + " days ago",
+                isLeft:result
+            }
+            //return moment([...sched.date.split('-').map(x=>+x)], 'YYYY-MM-DD').startOf('day').fromNow();
+        }catch(err){
+            return ''
+        }
+    },
+
+    
 
     
   }

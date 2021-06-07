@@ -54,11 +54,11 @@
 
                              <v-list-item-content>
                                 <v-list-item-title>
-                                    {{item.name}}
+                                    {{item.name}} - <span class="text-success">{{item.percentOff}} % OFF </span>
                                 </v-list-item-title>
                                 
                                 <v-list-item-subtitle>
-                                    {{item.content}}
+                                    {{item.content}} - Exp: <span class="text-warning">{{displayDate(item.expirationDate)}}</span>
                                 </v-list-item-subtitle>
                              </v-list-item-content>
 
@@ -101,6 +101,8 @@
                                  </div>
                              </v-list-item-action>
 
+                            
+
                              
                           </v-list-item>
                       </v-list-item-group>
@@ -124,6 +126,7 @@
 <script>
 import sidebar from '@/components/admin/sidebar.vue'
 import newitem from '@/components/admin/newitem.vue'
+import moment from 'moment'
 export default {
     middleware:['admin-auth'],
     components:{sidebar, newitem},
@@ -148,6 +151,7 @@ export default {
 
 
     methods:{
+        
         
 
         async fetchItems(){
@@ -252,7 +256,11 @@ export default {
                 console.log(err)
                 alert('Something wrong deleting this item.')
             }
-        }
+        },
+
+        displayDate(date){
+            return moment([...date.split('-').map(x=>+x)], 'YYYY-MM-DD').format('MMMM Do YYYY')
+        },
 
 
     }

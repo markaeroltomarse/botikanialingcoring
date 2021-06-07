@@ -37,10 +37,12 @@
                       
 
                       <strong>
-                          ₱ {{item.price}} 
+                          ₱ {{percentOff(item.price, item.percentOff)}}
                       </strong>
-                      <strike class="text-secondary">Colostomy Bag</strike>
-                      <span class="text-success">16% OFF</span>
+                      <div v-if="item.percentOff > 0">
+                        <strike class="text-secondary" >₱{{item.price}}</strike>
+                        <span class="text-success">{{item.percentOff}}% OFF</span>
+                      </div>
                       
                   </small>
 
@@ -65,7 +67,6 @@ export default {
     props:{
         items:{
             type:Array,
-            
         }
     },
     mounted(){
@@ -83,8 +84,18 @@ export default {
             
             return this.$router.replace({path:'/cart'})
             .catch(err => this.$router.replace({path:'/cart'}))
+        },
+
+        
+
+        percentOff(price, off){
+           
+            return Math.round((price * (1 - off / 100)) * 100) / 100
+
         }
-    }
+    },
+
+    
 }
 </script>
 

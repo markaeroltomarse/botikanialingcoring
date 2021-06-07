@@ -40,6 +40,17 @@ let Items = new Schema({
         default:0,
     },
 
+    percentOff:{
+        type:Number,
+        required:false,
+        default:0,  
+    },
+
+    expirationDate:{
+        type:String,
+        required:false,
+    },
+
     created:{
         type:String,
         default:today
