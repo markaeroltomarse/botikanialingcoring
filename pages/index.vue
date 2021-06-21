@@ -50,34 +50,35 @@ export default {
 
   methods:{
     async fetchItems(){
-           
+          
+
+        //LINISIN ANG PAG ORDER NG ITEM DAHIL MAY NABAGO SA SCHEME NG ITEMS 
+
+
         let res = await this.$axios.get('/admin/getitems')
         let arr = res.data.items
-        arr = arr.filter(item => this.leftDays(item.expirationDate).isLeft)
-        this.preitems = arr
+        //arr = arr.filter(item => this.leftDays(item.expirationDate).isLeft)
+        
 
-        for (const item of this.preitems) {
-            item.selectedqty = 1
+        for (const item of arr) {
+            item.selectedqty = 0
             item.image = await this.retrieveImg(item._id);
         }        
 
        
-        console.log('ITEMS', this.preitems)
-
-        this.copyQTY()
+        console.log('ITEMS', arr)
+        this.qtycopy = arr
+        this.items = arr
+        this.reloaded = false
+        //this.copyQTY()
     },
 
     copyQTY(){
         this.qtycopy = []
-        for (const item of this.preitems) {
-          
-            this.qtycopy.push({_id:item._id, qty:item.qty})
+        for (const qty of this.preitems.qty) {
+            console.log(qty)
+            this.qtycopy.push({date:qty.date, qty:qty.qty})
         } 
-
-        this.items = this.preitems
-        this.reloaded = false
-
-        
     },
     async retrieveImg(filename){
         // Create a reference to the file we want to download

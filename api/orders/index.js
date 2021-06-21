@@ -10,16 +10,13 @@ const moment = require('moment')
 router.post('/purchaseItem', async (req, res) => {
     try{
         console.log(req.body.customer)
-
         for(const item of req.body.customer.items){
-            await Items.updateOne({_id:item._id}, {$inc:{ qty: -item.selectedqty}})
+            await Items.updateOne({_id:item._id}, {$set:{ qty: item.qty}})
         }
 
         let neworder = new Orders(req.body.customer)
 
         neworder.save()
-        
-
         
         res.json({
             msg:'Order done!',

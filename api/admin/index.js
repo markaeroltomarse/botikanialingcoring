@@ -37,8 +37,9 @@ router.post('/updateqty', async (req, res) => {
     try{
         console.log(req.body)
 
-        for (const item of req.body) {
-             await Items.updateOne({ _id: item._id }, { $set:{ qty: item.qty }})
+        const {_id, items} = req.body
+        for (const item of items) {
+             await Items.updateOne({ _id, "qty.date":item.date}, { $set:{ "qty.$.qty": item.qty }})
         }
 
         res.json({
@@ -78,18 +79,24 @@ router.post('/deleteitem', async (req, res) => {
 router.get('/sales', async (req, res) => {
     try{
         let days = getCurrentWeek()
-
-        let orders = await Orders.find()
+        console.log(days)
+        let orders = await Orders.find({delivered:true})
         let items = await Items.find()
         
         let weekvalue = []
         days.forEach(day => {
-            let oneday = orders.filter(order => order.created == day & order.delivered)
-            let peritems = oneday.map(order => order.items.map(item => (item.selectedqty * item.price)))
-            peritems = peritems.map(arr => arr.reduce((a, b) => a + b, 0))
+            let total = 0
+            let oneday = orders.filter(order => order.formattedDate.day == day )
+            console.log('ONE DAY', oneday)
+            oneday.forEach(order => {
+                let mappedToTotal = order.items.map(item => item.selectedqty * item.price)
+                console.log("MAPPED TOTAL", mappedToTotal)
+                total += mappedToTotal.reduce((a, b) => a + b, 0)
+            })
             
-            peritems = peritems.reduce((a, b) => a + b, 0)
-            weekvalue.push(peritems)
+            
+            
+            weekvalue.push(total)
         })
 
         console.log(weekvalue)
@@ -100,10 +107,27 @@ router.get('/sales', async (req, res) => {
         res.json({
             result:true, 
             weekvalue, 
-            orders:orders.length,
+            orders:orders,
             product:items.length,
             items,
         })
+    }catch(err){
+        console.log(err)
+        res.json({msg:err, result:false})
+    }
+})
+
+
+router.post('/inventory/newqty', async (req, res) => {
+    try{
+        console.log(req.body)
+        const {_id, newitem} = req.body
+        let newQTY = await Items.updateOne(
+            { _id,}, 
+            { $push: { qty: newitem } }
+        );
+
+        res.json({result:true, newQTY})
     }catch(err){
         console.log(err)
         res.json({msg:err, result:false})
@@ -137,7 +161,7 @@ function getCurrentWeek() {
     var days = [];
 
     for (var i = 0; i <= 6; i++) {
-        days.push(moment(weekStart).add(i, 'days').format("MMMM Do YYYY,dddd"));
+        days.push(moment(weekStart).add(i, 'days').format("DD"));
     }
     
     return days

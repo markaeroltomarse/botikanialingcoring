@@ -67,7 +67,7 @@
 
               <hr>
 
-              <v-text-field 
+              <!-- <v-text-field 
                 outlined
                 dense
                 color="rgb(243, 77, 77)"
@@ -76,9 +76,9 @@
                 readonly
                 v-model="newitem.expirationDate"
                 label="Item Expiration date"
-              />
+              /> -->
 
-              <v-date-picker
+              <!-- <v-date-picker
                 v-model="datepicker"
                 year-icon="mdi-calendar-blank"
                 prev-icon="mdi-skip-previous"
@@ -86,7 +86,7 @@
                 color="error"
                 :min="today"
                 show-adjacent-months
-            ></v-date-picker>
+            ></v-date-picker> -->
 
 
               
@@ -152,7 +152,7 @@ export default {
                 
                 price:0,
 
-                expirationDate:'',
+                
                 
                 percentOff:0,
             },
@@ -165,7 +165,7 @@ export default {
 
             datepicker:null,
 
-            today:moment().format('YYYY-MM-DD')
+            
         }
     },
 
@@ -233,11 +233,7 @@ export default {
         },
     },
 
-    watch:{
-        datepicker(val){
-            this.newitem.expirationDate = val
-        }
-    }
+    
 }
 </script>
 

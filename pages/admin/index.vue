@@ -6,7 +6,15 @@
       <h1>HOME</h1>
 
       <div class="bg-white p-3 orders" style="border-top:5px solid rgb(248, 108, 108);">
-        <h4>Orders</h4>
+        <div class="text-right">
+          <v-btn small color="warning" outlined>
+            Oders: {{getDelivered(false)}}
+          </v-btn>
+
+          <v-btn small color="success" outlined>
+            Delivered: {{getDelivered(true)}}
+          </v-btn>
+        </div>
 
         <div class="text-center p-5" v-if="loader">
           <v-progress-circular indeterminate color="error"/>
@@ -51,7 +59,7 @@
                   <v-divider vertical/>
 
                   <v-list-item-action class="mx-3" >
-                      <h4>TOTAL: ₱ {{order.items.map(item => (item.selectedqty * item.price)).toLocaleString()}} ({{order.items.length}} item)</h4>
+                      <h4>TOTAL: ₱ {{getTotalAmount(order.items)}} ({{order.items.length}} item)</h4>
                   </v-list-item-action>
               </v-list-item>
           </v-list-item-group>
@@ -115,6 +123,7 @@ export default {
           let res = await this.$axios.get('/admin/orders')
 
           this.orders = res.data.orders
+          console.log("ORDERS", this.orders)
         }catch(err){
           console.log(err)
         }
@@ -126,6 +135,18 @@ export default {
       viewItems(items){
         
         this.items = items 
+      },
+
+      getDelivered(type){
+        return JSON.parse(JSON.stringify(this.orders)).filter(order => order.delivered == type).length
+      },
+
+      getTotalAmount(items){
+        let arr = items
+        arr = arr.map(item => item.selectedqty * item.price)
+        
+        return arr.reduce((a,b) => a + b, 0)
+        
       }
       
     }

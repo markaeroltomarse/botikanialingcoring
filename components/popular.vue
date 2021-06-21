@@ -23,7 +23,7 @@
                             {{item.name}}
                         </strong>
 
-                        <span style="font-size:10px;" class="text-secondary">Stocks: {{item.qty}}</span>
+                        <span style="font-size:10px;" class="text-secondary">Stocks: {{stocks(item.qty)}}</span>
                       </div>
                       <br>
                       <span style="font-size:10px;" class="text-secondary">{{item.content}}</span>
@@ -46,10 +46,8 @@
                       
                   </small>
 
-                  <div class="d-flex justify-content-between" >
-                      <v-btn small color="success" rounded> 
-                          BUY
-                      </v-btn>
+                  <div class="text-right" >
+                      
 
                       <v-btn small color="primary" rounded @click="addtocart(item)">
                           ADD
@@ -89,9 +87,14 @@ export default {
         
 
         percentOff(price, off){
-           
             return Math.round((price * (1 - off / 100)) * 100) / 100
 
+        },
+
+        stocks(qty){
+            let total = 0
+            qty.forEach(q => total += q.qty)
+            return total
         }
     },
 

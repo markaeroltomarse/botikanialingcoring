@@ -2,7 +2,7 @@
   <div>
       <sidebar/>
       <newitem v-if="newitemSet" v-on:close="newitemSet = false" v-on:refresh="fetchItems"/>
-      
+       <quantities v-if="quantitiesModal" v-on:refresh="refresh" v-on:close="quantitiesModal = false" :item="item"/>
       <section v-if="isdeleteItem" class="overlay d-flex justify-content-center align-items-center" style="background-color: rgba(243, 77, 77, 0.363);">
           <div data-aos="zoom-in" class="shaodw bg-white rounded p-5 " style="height:15%; margin:">
               Quantity are will deleted?
@@ -28,12 +28,6 @@
                     <h1>Inventory</h1>
 
                     <div>
-
-                        <v-btn color="success" class="mx-2" @click="updateQTY()" v-if="this.qtycopy.filter(copy => {
-                            return this.items.some(item => item.qty != copy.qty && item._id == copy._id)
-                        }).length > 0">SAVE CHANGES</v-btn>
-
-                        
                         <v-btn @click="newitemSet = true" color="rgb(243, 77, 77)" class="text-white" style="float:right;">
                             ADD NEW ITEM + 
                         </v-btn>
@@ -57,9 +51,7 @@
                                     {{item.name}} - <span class="text-success">{{item.percentOff}} % OFF </span>
                                 </v-list-item-title>
                                 
-                                <v-list-item-subtitle>
-                                    {{item.content}} - Exp: <span class="text-warning">{{displayDate(item.expirationDate)}}</span>
-                                </v-list-item-subtitle>
+                                
                              </v-list-item-content>
 
                              <v-list-item-action class="mx-3">
@@ -77,28 +69,15 @@
                              </v-list-item-action>
                              <v-divider vertical/>
 
-                             <v-list-item-action data-aos="fade-left" class="mx-3" v-if="qtycopy.find(copy => copy._id == item._id && copy.qty != item.qty)">
-                                 <v-btn color="primary" outlined>MODIFIED: <strong>{{qtycopy.find(copy => copy._id == item._id && copy.qty != item.qty).qty}}</strong></v-btn>
-                             </v-list-item-action>
+                             
 
-                             <v-list-item-action class="ml-3">
-                                 <div class="quantyaction">
-                                     <div>
-                                         <v-btn @click="minus(item)" color="rgb(243, 77, 77)" class="text-white">
-                                             <strong>-</strong>
-                                         </v-btn>
-                                     </div>
+                             
+                             
 
-                                     <div class="text-center py-1">
-                                        {{item.qty}}
-                                     </div>
-
-                                     <div>
-                                         <v-btn @click="add(item)" color="rgb(243, 77, 77)" class="text-white">
-                                             <strong>+</strong>
-                                         </v-btn>
-                                     </div>
-                                 </div>
+                             <v-list-item-action>
+                                 <v-btn color="error" @click="openItem(item)">
+                                     OPEN
+                                 </v-btn>
                              </v-list-item-action>
 
                             
@@ -115,7 +94,7 @@
                   </v-btn>
 
                   <v-btn outlined color="rgb(243, 77, 77)">
-                      TOTAL QUANTITY: {{items.reduce((a, b) => a.qty + b.qty, 0)}}
+                      <!-- TOTAL QUANTITY: {{items.qty.reduce((a, b) => a.qty + b.qty, 0)}} -->
                   </v-btn>
               </div>
           </div>
@@ -126,10 +105,11 @@
 <script>
 import sidebar from '@/components/admin/sidebar.vue'
 import newitem from '@/components/admin/newitem.vue'
+import quantities from '@/components/admin/quantities.vue'
 import moment from 'moment'
 export default {
     middleware:['admin-auth'],
-    components:{sidebar, newitem},
+    components:{sidebar, newitem, quantities},
 
     data(){
         return {
@@ -141,6 +121,10 @@ export default {
             reloaded:true,
             isdeleteItem:false,
             selectedItemToDelete:null,
+
+            quantitiesModal:false,
+
+            item:null
         }
     },
 
@@ -155,7 +139,7 @@ export default {
         
 
         async fetchItems(){
-           
+            this.reloaded = true
             let res = await this.$axios.get('/admin/getitems')
 
             this.items = res.data.items
@@ -167,20 +151,20 @@ export default {
             }        
 
             console.log('ITEMS', this.items)
-
-            this.copyQTY()
+            this.reloaded = false
+            //this.copyQTY()
         },
 
-        copyQTY(){
-            this.qtycopy = []
-            for (const item of this.items) {
-                this.qtycopy.push({_id:item._id, qty:item.qty})
-            } 
+        // copyQTY(){
+        //     this.qtycopy = []
+        //     for (const item of this.items) {
+        //         this.qtycopy.push({_id:item._id, qty:item.qty})
+        //     } 
 
-            this.reloaded = false
+        //     this.reloaded = false
 
             
-        },
+        // },
         async retrieveImg(filename){
             // Create a reference to the file we want to download
             const ref = this.$store.state.firebase.storage().ref()
@@ -210,34 +194,7 @@ export default {
             item.qty++
         },
 
-        async updateQTY(){
-            this.reloaded = true
-
-            let copyitem = JSON.parse(JSON.stringify(this.items))
-            
-            copyitem = copyitem.filter(item => {
-                return this.qtycopy.some(copy => item.qty != copy.qty)
-            })
-            
-
-            if(copyitem.length < 0) return alert("No Changes Quantity Products")
-            
-            try{
-                let res = await this.$axios.post('/admin/updateqty', copyitem)
-                
-                alert(res.data.msg)
-
-                if(res.data.result) return this.fetchItems()
-
-            }catch(err){
-                console.log(err)
-                this.reloaded = false
-            }
-
-            
-
-            
-        },
+        
 
         deleteItem(item){
             this.selectedItemToDelete = item
@@ -258,9 +215,21 @@ export default {
             }
         },
 
-        displayDate(date){
-            return moment([...date.split('-').map(x=>+x)], 'YYYY-MM-DD').format('MMMM Do YYYY')
+        openItem(item){
+            this.item = item
+            this.quantitiesModal = true
         },
+
+        refresh(id){
+            
+            
+            this.fetchItems()
+            let item = this.items.find(item => item._id == id)
+            if(item != null) return this.openItem(item)
+            
+        }
+
+        
 
 
     }

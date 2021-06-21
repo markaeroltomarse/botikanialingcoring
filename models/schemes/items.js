@@ -35,9 +35,9 @@ let Items = new Schema({
     },
 
     qty:{
-        type:Number,
+        type:Array,
         required:false,
-        default:0,
+        //{date, qty}
     },
 
     percentOff:{

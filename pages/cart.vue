@@ -90,7 +90,7 @@ export default {
   methods:{
       purchaseNow(){
           if(this.getTotal() <= 0 || this.$store.state.cart.length == 0) return alert('Please Enter Item Quantity in your cart.')
-
+          this.filterSelectedQTY()
           this.isPurchase = true
       },
       getTotal(){
@@ -99,7 +99,7 @@ export default {
           return total.toLocaleString()
       },
       add(item){
-          if(item.selectedqty >= item.qty) return alert("Out of stock.")
+          if(item.selectedqty >= this.stocks(item.qty)) return alert("Out of stock.")
           item.selectedqty++
           this.cart = []
           this.cart = this.$store.state.cart
@@ -116,6 +116,34 @@ export default {
 
           this.cart = []
           this.cart = this.$store.state.cart
+      },
+      
+      filterSelectedQTY(){
+          this.cart.forEach(item => {
+              let reversed = item.qty.reverse()
+              let selectedqty = item.selectedqty
+              reversed.forEach(qty => {
+                  if(selectedqty == 0 || qty.qty == 0) return
+                  selectedqty = qty.qty - selectedqty
+                     
+                  qty.qty = selectedqty <= 0 ? 0 : selectedqty
+                  
+                  if(selectedqty <= 0) selectedqty = Math.abs(selectedqty)
+
+              })
+              
+              item.qty.reverse()
+              console.log(item.qty)
+          })
+
+          this.$store.state.cart = this.cart
+          
+      },
+
+      stocks(qty){
+        let total = 0
+        qty.forEach(q => total += q.qty)
+        return total
       }
   }
 }

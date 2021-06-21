@@ -6,7 +6,7 @@
 
           <div class="d-flex flex-row">
               <div class="p-5 text-white text-center rounded bg-danger mx-2" >
-                  <h3>{{orders}}</h3>
+                  <h3>{{orders.length}}</h3>
 
                   Orders
               </div>
@@ -17,11 +17,7 @@
                   Product
               </div>
 
-              <div class="p-5 text-white text-center rounded bg-danger mx-2" >
-                  <h3>{{items.reduce((a, {qty}) => a + qty, 0)}}</h3>
-
-                  Items
-              </div>
+             
 
               <div class="p-5 text-white text-center rounded bg-danger mx-2" >
                   <h3>₱ {{weekvalue.reduce((a, b) => a + b, 0).toLocaleString()}}</h3>
@@ -40,6 +36,7 @@
                 <v-card-text>
                 <v-sheet color="rgba(0, 0, 0, .12)">
                     <v-sparkline
+                    :labels="weekvaluewithlbl"
                     :value="weekvalue"
                     color="rgba(255, 255, 255, .7)"
                     height="100"
@@ -48,8 +45,11 @@
                     smooth
                     >
                     <template v-slot:label="item">
-                        ₱{{ item.value.toLocaleString() }}
+                        ₱{{ parseInt(item.value).toLocaleString() }}
+                        
                     </template>
+
+                   
                     </v-sparkline>
                 </v-sheet>
                 </v-card-text>
@@ -64,12 +64,25 @@
 
                
             </v-card>
+
+
+            <v-divider></v-divider>
+
+            <h4 class="text-danger">Calendar</h4>
+
+            <vue-scheduler
+                :events="events"
+                :event-display="eventDisplay"
+            />
+
+
+            
       </section>
   </div>
 </template>
 
 <script>
-import moment from 'moment'
+
 import sidebar from '@/components/admin/sidebar.vue'
 export default {
     middleware:['admin-auth'],
@@ -77,20 +90,72 @@ export default {
         sidebar
     },
 
-
+    data(){
+        
+        return {
+            colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+        }
+    },
 
     async asyncData({$axios}){
         try{    
             let res = await $axios.get('/admin/sales')
-            console.log(res.data)
             const {weekvalue,orders,product,items} = res.data
+            let days  = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
+
+            let i = -1
+            let weekvaluewithlbl = weekvalue.map(day => {
+                i++
+                return day + ` ${days[i]}`
+            })
+
+            let total = 0
+            let getTotal = (items) => {
+                let mappedToTotal = items.map(item => item.selectedqty * item.price)
+                console.log("MAPPED TOTAL", mappedToTotal)
+                total += mappedToTotal.reduce((a, b) => a + b, 0)
+            }
+            
+            
+            let events = []
+            let notallow = []
 
             
+            orders.forEach(order => {
+                let date = order.formattedDate.year + '-' + order.formattedDate.month + '-' + order.formattedDate.day
+                if(notallow.some(d => d == date)) return 
+                let orderscopy = orders
+
+                orderscopy.filter(o => date == o.formattedDate.year + '-' + o.formattedDate.month + '-' + o.formattedDate.day)
+
+                orderscopy.forEach(o => {
+                    getTotal(o.items)
+                })
+
+                events.push({
+                    date:date,
+                    label:'₱'+total.toLocaleString(),
+                    startTime:'1:00',
+                    endTime:'2:00'
+                })
+
+                total = 0
+                
+
+                notallow.push(date)
+            })
+
+            
+            
+
+            console.log(events)
             return {
+                weekvaluewithlbl,
                 weekvalue, 
                 orders,
                 product,
-                items
+                items,
+                events
             }
         }catch(err){
             console.log(err)
@@ -102,6 +167,14 @@ export default {
     },
 
     methods:{
+      eventDisplay(event) {
+            try{
+                return event.label
+            }catch(err){
+                return 'Loading...'
+            }
+        },
+
         
     }
 }

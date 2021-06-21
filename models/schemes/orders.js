@@ -47,7 +47,14 @@ let Orders = new Schema({
         required:false,
     },
     
-    
+    formattedDate:{
+        type:Object,
+        default:{
+            year:moment().format('YYYY'),
+            month:moment().format('MM'),
+            day:moment().format('DD'),
+        }
+    },
     created:{
         type:String,
         default:today
