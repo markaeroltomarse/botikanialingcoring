@@ -1,63 +1,41 @@
-const router = require('express').Router()
-const mongoose = require('mongoose')
-const Models = require('../../models/index')
+const router = require("express").Router();
+const mongoose = require("mongoose");
+const Models = require("../../../data/models");
 
-const {Admin} = Models
+const { Admin } = Models;
 
+const insertAdmin = async (req, res) => {
+  let newadmin = new Admin({
+    fname: "Admin1",
+    lname: "Admin",
+    mname: "M",
+    username: "admin@gmail.com",
+    password: "admin1",
+    address: "21312321321",
+    gender: "Male",
+  });
 
-router.get('/insertAdmin', async (req, res) => {
-    try{
-        let newadmin = new Admin({
-            fname:'Admin1',
-            lname:'Admin',
-            mname:'M',
-            username:'admin@gmail.com',
-            password:'admin1',
-            address:'21312321321',
-            gender:'Male',
-        })
-    
-        newadmin.save()
-    
-        res.json({newadmin})
-    }catch(err){
-        res.json({msg:err})
-    }
-})
+  newadmin.save();
 
-router.post('/login',  async (req, res) => {
-    console.log(req.body)
-    try{
-        let admin = await Admin.find(req.body)
-        if(admin.length < 0){
-            res.json({
-                msg:'Invalid Account.',
-                result:false,
-            })
-        }
-        res.status(200).json({
-            msg:"You logged in!",
-            result:true,
-            type:'success',
-            admin
-        })
-    }catch(err){
-        console.log(err)
-        res.json({
-            msg:err,
-            result:false,
-            type:'error'
-        })
-    }
-})
+  return { newadmin };
+};
 
-
-
-
+const login = async (req, res) => {
+  let admin = await Admin.findOne(req.body);
+  if (!admin) {
+    throw new Error("Invalid Account.");
+  }
+  return {
+    msg: "You logged in!",
+    result: true,
+    type: "success",
+    admin,
+  };
+};
 
 // router.post('/signup/sendcode', async (req, res) => {
 //     try{
-        
+
 //         const {code, email} = req.body
 //         console.log(req.body)
 //         if(isEmailExist(email) == true) {
@@ -98,13 +76,16 @@ router.post('/login',  async (req, res) => {
 // })
 
 // async function isEmailExist(email){
-    
+
 //     let customer = await Customers.find({email:email.toLowerCase()})
-    
+
 //     if(customer.length > 0) {
 //         return true
 //     }
 //     return false
 // }
 
-module.exports = router
+module.exports = {
+  login,
+  insertAdmin,
+};

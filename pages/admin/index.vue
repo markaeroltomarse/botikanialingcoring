@@ -3,7 +3,7 @@
     <sidebar/> 
     <items :items="items" v-if="items.length > 0" v-on:close="items = []"/>
     <section class="adminMainSection">
-      <h1>HOME</h1>
+      <h1>Orders</h1>
 
       <div class="bg-white p-3 orders" style="border-top:5px solid rgb(248, 108, 108);">
         <div class="text-right">

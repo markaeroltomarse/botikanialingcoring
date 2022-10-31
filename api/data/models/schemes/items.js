@@ -3,8 +3,6 @@ const moment = require('moment')
 
 const uuid = require('uuid').v4()
 
-let today = moment().format('MMMM Do YYYY, h:mm:ss a');
-let yesterday =  moment().subtract(1, "days").format('MMMM Do YYYY, h:mm:ss a') - 1;
 
 const Schema = mongoose.Schema
 
@@ -51,15 +49,9 @@ let Items = new Schema({
         required:false,
     },
 
-    created:{
-        type:String,
-        default:today
-    },
-
-  
 
     
-}, {strict:false})
+}, {strict:true, timestamps: true})
 
 
 module.exports = mongoose.models.items || mongoose.model('items', Items)

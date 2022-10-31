@@ -1,20 +1,17 @@
 <template>
   <v-app class="mainFont bg-light">
-    
     <navs>
-      
     </navs>
     <gloader/>
     <nuxt class="text-dark bg-light " />
+    <toaster />
   </v-app>
 </template>
 
 <script>
-
-
 import navs from '@/components/navs'
-
 import gloader from '@/components/gloader'
+import toaster from '@/components/global/toaster'
 export default {
   head() {
       return {
@@ -28,7 +25,7 @@ export default {
         ]
       }
   },
-  mounted(){
+  beforeMount(){
     this.initFirebase()
   },
   data () {
@@ -37,7 +34,7 @@ export default {
     }
   },
   components:{
-    navs, gloader
+    navs, gloader, toaster
   },
 
   methods:{

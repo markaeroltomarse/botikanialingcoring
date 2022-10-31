@@ -18,27 +18,17 @@
                     v-for="qty in item.qty"
                     :key="qty.date"
                     style="border-left:3px solid rgb(243, 77, 77);">
-                    
-
                         <v-list-item-content>
                             <v-list-item-title>
                                 {{displayDate(qty.date)}} 
                             </v-list-item-title>
-                        
-                    
                         </v-list-item-content>
-
 
                         <v-list-item-action data-aos="fade-left" class="mx-3" v-if="qtycopy.some(copy => copy.date == qty.date && copy.qty != qty.qty)">
                             <v-btn  color="primary" outlined>FROM {{qtycopy.find(copy => copy.date == qty.date).qty}} TO <strong>{{qty.qty}}?</strong></v-btn>
                         </v-list-item-action>
                     
-
                         <v-divider vertical/>
-
-                    
-    
-
                         <v-list-item-action class="ml-3">
                             <div class="quantyaction">
                                 <div>
@@ -48,7 +38,7 @@
                                 </div>
 
                                 <div class="text-center py-1">
-                                {{qty.qty}}
+                                    {{qty.qty}}
                                 </div>
 
                                 <div>
@@ -64,15 +54,11 @@
                             <v-btn color="rgb(243, 77, 77)" outlined> DISPOSE <v-icon>mdi-delete</v-icon></v-btn>
                         </v-list-item-action>
 
-                    
-
                         
                     </v-list-item>
 
 
-                    <v-list-item 
-                    
-                    style="border-left:3px solid #ce22b7;">
+                    <v-list-item style="border-left:3px solid #ce22b7;">
                 
                         <v-list-item-action>
                             <v-text-field 
@@ -118,9 +104,6 @@
                     </v-list-item>
                 </v-list-item-group>
             </v-list>
-
-
-            
 
             <v-date-picker
                 v-model="datepicker"
@@ -174,60 +157,46 @@ export default {
     },
 
     mounted(){
-        
         this.qtycopy = JSON.parse(JSON.stringify(this.item.qty)) // {date, qty}
-        alert(this.qtycopy.length)
     },
     methods:{
         
         async newQTY(){
             try{
-
-                if(this.newitem.date == '') return alert('Select a date for expiration.')
+                if(this.newitem.date == '') return this.$store.commit("LOAD_TOASTER", 'Select a date for expiration.')
                 this.reload = true
-                let res = await this.$axios.post('/admin/inventory/newqty', {_id:this.item._id, newitem:this.newitem})
-
-                
+                await this.$axios.post('/admin/inventory/newqty', {_id:this.item._id, newitem:this.newitem})
                 this.$emit('refresh', this.item._id)
                 this.$emit('close')
-                
             }catch(err){
-                alert('something wrong...')
-                console.log(err)
+                this.$store.commit("LOAD_TOASTER", err.response.data.message)
             }
         },
 
 
         async updateQTY(){
             this.reload = true
-
             let copyitem = JSON.parse(JSON.stringify(this.item.qty))
-            
             copyitem = copyitem.filter(item => {
                 return this.qtycopy.some(copy => item.date == copy.date && item.qty != copy.qty)
             })
             
-
-            if(copyitem.length <= 0) return alert("No Changes Quantity Products")
+            if(copyitem.length <= 0) return this.$store.commit("LOAD_TOASTER", "No Changes Quantity Products")
             
             try{
-                let res = await this.$axios.post('/admin/updateqty', {_id:this.item._id, items:copyitem})
-                
-                alert(res.data.msg)
-                
+                await this.$axios.post('/admin/updateqty', {_id:this.item._id, items:copyitem})
                 this.$emit('refresh', this.item._id)
-
                 return this.$emit('close')
-
             }catch(err){
                 console.log(err)
+                this.$store.commit("LOAD_TOASTER", err.response.data.message)
                 this.reloaded = false
             }  
         },
 
         minus(qty){
           //let itemcopy = this.qtycopy.find(qty => qty._id == item._id)
-          if(qty.qty <= 0) return alert('BAWAL')
+          if(qty.qty <= 0) return this.$store.commit("LOAD_TOASTER", "Unable")
 
           qty.qty--
         },
@@ -237,8 +206,7 @@ export default {
         },
 
         newitemMinus(){
-            if(this.newitem.qty <= 0) return alert('BAWAL')
-
+            if(this.newitem.qty <= 0) return this.$store.commit("LOAD_TOASTER", "Unable")
             this.newitem.qty--
         },
 
@@ -271,9 +239,6 @@ export default {
         overflow-y:scroll;
         padding:3% 20%;
     }
-   
-
-
     .quantyaction{
         display: grid;
         grid-template-columns:1fr 1.5fr 1fr;

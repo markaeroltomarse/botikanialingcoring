@@ -70,10 +70,7 @@
                              <v-divider vertical/>
 
                              
-
                              
-                             
-
                              <v-list-item-action>
                                  <v-btn color="error" @click="openItem(item)">
                                      OPEN
@@ -106,7 +103,6 @@
 import sidebar from '@/components/admin/sidebar.vue'
 import newitem from '@/components/admin/newitem.vue'
 import quantities from '@/components/admin/quantities.vue'
-import moment from 'moment'
 export default {
     middleware:['admin-auth'],
     components:{sidebar, newitem, quantities},
@@ -117,13 +113,10 @@ export default {
             images:[],
             items:[],
             qtycopy:[],
-
             reloaded:true,
             isdeleteItem:false,
             selectedItemToDelete:null,
-
             quantitiesModal:false,
-
             item:null
         }
     },
@@ -132,11 +125,7 @@ export default {
         this.fetchItems()
     },
 
-
-
     methods:{
-        
-        
 
         async fetchItems(){
             this.reloaded = true
@@ -145,26 +134,15 @@ export default {
             this.items = res.data.items
 
             for (const item of this.items) {
-                
                 const image = await this.retrieveImg(item._id);
                 item.image = image
-            }        
+            }       
 
             console.log('ITEMS', this.items)
             this.reloaded = false
             //this.copyQTY()
         },
 
-        // copyQTY(){
-        //     this.qtycopy = []
-        //     for (const item of this.items) {
-        //         this.qtycopy.push({_id:item._id, qty:item.qty})
-        //     } 
-
-        //     this.reloaded = false
-
-            
-        // },
         async retrieveImg(filename){
             // Create a reference to the file we want to download
             const ref = this.$store.state.firebase.storage().ref()
@@ -172,7 +150,6 @@ export default {
 
             // Get the download URL
             let res = await retrieve.getDownloadURL()
-            console.log(filename, res)
             return res
         },
 
@@ -184,17 +161,13 @@ export default {
 
 
         minus(item){
-          //let itemcopy = this.qtycopy.find(qty => qty._id == item._id)
-          if(item.qty <= 0) return alert('BAWAL')
-
+          if(item.qty <= 0) return alert('Unable')
           item.qty--
         },
 
         add(item){
             item.qty++
         },
-
-        
 
         deleteItem(item){
             this.selectedItemToDelete = item
@@ -203,15 +176,11 @@ export default {
 
         async deleteNow(){
             try{
-                let res = await this.$axios.post('/admin/deleteitem', {item:this.selectedItemToDelete})
-
-                alert(res.data.msg)
-
+                await this.$axios.post('/admin/deleteitem', {item:this.selectedItemToDelete})
                 this.fetchItems()
                 this.isdeleteItem = false
             }catch(err){
-                console.log(err)
-                alert('Something wrong deleting this item.')
+                this.$store.commit('LOAD_TOASTER', err.response.data.message)
             }
         },
 
@@ -221,17 +190,10 @@ export default {
         },
 
         refresh(id){
-            
-            
             this.fetchItems()
             let item = this.items.find(item => item._id == id)
             if(item != null) return this.openItem(item)
-            
         }
-
-        
-
-
     }
 }
 </script>
