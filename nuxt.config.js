@@ -61,15 +61,20 @@ export default {
   ],
 
   env: {
-    AUTH_KEY: "adeef231asdqwd123"
+    AUTH_KEY: "adeef231asdqwd123",
+    baseURL:
+      (process.env.NODE_ENV !== "production"
+        ? `http://localhost:${5000}/`
+        : `https://botikanialingcoring.herokuapp.com/`) + "api"
   },
 
   axios: {
     credentials: true,
     baseURL:
       (process.env.NODE_ENV !== "production"
-        ? `http://localhost:3000/`
-        : `https://botikanialingcoring.herokuapp.com/`) + "api"
+        ? `http://localhost:${5000}/`
+        : `https://botikanialingcoring.herokuapp.com/`) + "api",
+    APP_PORT: 5000
   },
 
   auth: {
@@ -90,5 +95,8 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 
-  serverMiddleware: ["~/api/server.js"]
+  serverMiddleware: ["~/api/server.js"],
+  server: {
+    port: 5000
+  }
 };

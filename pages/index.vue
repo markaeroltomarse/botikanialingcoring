@@ -2,6 +2,7 @@
   <div>
       <section class="mainSection">
       <div class="services">
+        
         <div class="text-center border  p-5">
           <div class="text-light bg-light p-4 rounded-circle mb-3">
             <v-icon size="130px">
@@ -22,8 +23,6 @@
       </div>
   
       <popular :items="items"/>
-    
-      
     </section>
     <footering/>
   </div>
@@ -35,7 +34,7 @@ import popular from '@/components/popular'
 import footering from '@/components/footer'
 export default {
   components:{
-    popular, footering
+    popular, footering,
   },
   async mounted(){
     this.fetchItems()
@@ -51,21 +50,16 @@ export default {
   methods:{
     async fetchItems(){
           
-
         //LINISIN ANG PAG ORDER NG ITEM DAHIL MAY NABAGO SA SCHEME NG ITEMS 
 
 
-        let res = await this.$axios.get('/admin/getitems')
+        let res = await this.$axios.get('/products/best-products')
         let arr = res.data.items
-        //arr = arr.filter(item => this.leftDays(item.expirationDate).isLeft)
-        
-
         for (const item of arr) {
             item.selectedqty = 0
             item.image = await this.retrieveImg(item._id);
         }        
 
-       
         console.log('ITEMS', arr)
         this.qtycopy = arr
         this.items = arr
@@ -92,7 +86,6 @@ export default {
     },
 
     leftDays(sched){
-
         try{
             var eventdate = moment([...sched.split('-').map(x=>+x)], 'YYYY-MM-DD');
             var todaysdate = moment();
@@ -107,10 +100,6 @@ export default {
             return ''
         }
     },
-
-    
-
-    
   }
 }
 </script>

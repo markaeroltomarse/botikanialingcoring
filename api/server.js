@@ -33,7 +33,10 @@ app.use((req, res, next) => {
 
 app.use(
   cors({
-    origin: ["https://traqrsystem.herokuapp.com/", "http://localhost:3000"],
+    origin: [
+      "https://traqrsystem.herokuapp.com/",
+      `http://localhost:${process.env.APP_PORT}`
+    ],
     methods: ["POST", "GET", "PUT", "PATCH", "CREATE", "DELETE"],
     credentials: true
   })
@@ -45,8 +48,11 @@ app.use("/api/authen", require("./modules/authen"));
 //admin
 app.use("/api/admin", require("./modules/admin"));
 
-//officer
+//orders
 app.use("/api/orders", require("./modules/orders"));
+
+//products
+app.use("/api/products", require("./modules/products"));
 
 // Error handler
 const { errorHandler } = require("./common/exceptions/async-handler.exception");

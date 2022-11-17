@@ -20,7 +20,7 @@
      </div>
      <header class="px py-3 bg-white">
         
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between align-center">
             <div>
                 <h1>
                     <v-icon size="40px">
@@ -30,15 +30,15 @@
                 </h1>
             </div>
 
-            <div class="pt-2">
-                <div style="background-color:#f2f2f2;" class="d-flex justify-content-between">
+            <div class="pt-2 ">
+                <div style="background-color:#f2f2f2;" class="d-flex justify-content-between rounded p-2">
                     <div >
                         <v-btn to="/cart" class="border" fab small color="rgb(248, 108, 108)">
                             <v-icon color="white" size="20px">mdi-cart</v-icon>
                         </v-btn>
                     </div>
 
-                    <div class="text-center p-2">
+                    <div class="text-center p-2 ">
                         <small>My Cart ({{$store.state.cart.length}})</small>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
             HOME
         </nuxt-link>
 
-        <nuxt-link to="/" class="mx-5 text-white">
+        <nuxt-link to="#best-products" class="mx-5 text-white">
             BEST PRODUCTS
         </nuxt-link>
     </nav>
