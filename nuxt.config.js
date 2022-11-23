@@ -3,8 +3,8 @@ import colors from "vuetify/es5/util/colors";
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: "%s - botika-aling-koring",
-    title: "botika-aling-koring",
+    titleTemplate: "%s - Botika ni Aling Coring",
+    title: "Botika ni Aling Coring",
     htmlAttrs: {
       lang: "en"
     },
@@ -94,9 +94,11 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
-
-  serverMiddleware: ["~/api/server.js"],
   server: {
     port: 5000
-  }
+  },
+  serverMiddleware: [
+    //"~/api/server.js",
+    { path: "", handler: "~/api/server.js" }
+  ]
 };

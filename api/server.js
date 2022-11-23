@@ -61,7 +61,4 @@ app.use(errorHandler);
 
 console.log("EXPRESS API RUNNING");
 
-module.exports = {
-  path: "",
-  handler: app
-};
+module.exports = app;

@@ -51,8 +51,6 @@ export default {
     async fetchItems(){
           
         //LINISIN ANG PAG ORDER NG ITEM DAHIL MAY NABAGO SA SCHEME NG ITEMS 
-
-
         let res = await this.$axios.get('/products/best-products')
         let arr = res.data.items
         for (const item of arr) {
