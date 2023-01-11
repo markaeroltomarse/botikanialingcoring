@@ -94,14 +94,14 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    plugins: [
-      new webpack.LoaderOptionsPlugin({
-        // test: /\.xxx$/, // may apply this only for some modules
-        options: {
-          hashFunction: "sha256"
-        }
-      })
-    ]
+    // plugins: [
+    //   new webpack.LoaderOptionsPlugin({
+    //     // test: /\.xxx$/, // may apply this only for some modules
+    //     options: {
+    //       hashFunction: "sha256"
+    //     }
+    //   })
+    // ]
   },
   server: {
     port: 5000
