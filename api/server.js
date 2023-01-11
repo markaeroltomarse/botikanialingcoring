@@ -42,7 +42,8 @@ app.use(
   })
 );
 
-app.use("/api/authen", require(path.join(__dirname, "./modules/authen")));
+const auth = require(path.join(__dirname, "./modules/authen"));
+app.use("/api/authen", auth);
 app.use("/api/admin", require(path.join(__dirname, "./modules/admin")));
 app.use("/api/orders", require(path.join(__dirname, "./modules/orders")));
 app.use("/api/products", require(path.join(__dirname, "./modules/products")));
