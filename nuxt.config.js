@@ -104,6 +104,6 @@ export default {
   },
   server: {
     port: 5000
-  }
+  },
   serverMiddleware: [{ path: "", handler: "~/server.js" }]
 };
