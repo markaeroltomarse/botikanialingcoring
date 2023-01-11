@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const moment = require("moment");
-
+const path = require("path");
 const cors = require("cors");
 //DOT ENV
 require("dotenv/config");
@@ -42,15 +42,13 @@ app.use(
   })
 );
 
-app.use("/api/authen", require("./api/modules/authen"));
-app.use("/api/admin", require("./api/modules/admin"));
-app.use("/api/orders", require("./api/modules/orders"));
-app.use("/api/products", require("./api/modules/products"));
+app.use("/api/authen", require(path.join(__dirname, "./modules/authen")));
+app.use("/api/admin", require(path.join(__dirname, "./modules/admin")));
+app.use("/api/orders", require(path.join(__dirname, "./modules/orders")));
+app.use("/api/products", require(path.join(__dirname, "./modules/products")));
 
 // Error handler
-const {
-  errorHandler
-} = require("./api/common/exceptions/async-handler.exception");
+const { errorHandler } = require("./common/exceptions/async-handler.exception");
 
 app.use(errorHandler);
 
