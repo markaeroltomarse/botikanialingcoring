@@ -136,7 +136,6 @@
 
 <script>
 
-import moment from 'moment'
 
 export default {
     data(){
@@ -210,12 +209,10 @@ export default {
         },
         uploadImage(filename){
             alert(this.selectedFileimg.type)
-            console.log('FILETYPE FIREBASE', this.selectedFileimg.type)
             const ref = this.$store.state.firebase.storage().ref()
 
        
 
-            console.log('FILE FIREBASE', this.selectedFileimg)
             const metadata = {
                 contentType:this.selectedFileimg.type
             }
@@ -225,7 +222,6 @@ export default {
             task
             .then(snapshot => snapshot.ref.getDownloadURL())
             .then(url => {
-                console.log("URL", url)
                 this.$emit('close')
                 this.$emit('refresh')
                 this.loader = false

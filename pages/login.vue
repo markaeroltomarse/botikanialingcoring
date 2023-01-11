@@ -72,7 +72,6 @@ export default {
 
       async insert(){
           let res = await this.$axios.get('/authen/insertAdmin')
-          console.log('NEW ADMIN', res.data.newadmin)
       }
       
   }

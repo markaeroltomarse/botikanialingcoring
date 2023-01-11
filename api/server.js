@@ -8,12 +8,10 @@ require("dotenv/config");
 
 // Database connection
 mongoose.connect(
-  "mongodb+srv://tagalog233:manualdragon3@node-express-lb96i.mongodb.net/botika?retryWrites=true&w=majority",
+  "mongodb+srv://tagalog233:manualdragon3@node-express-lb96i.mongodb.net/botika",
   {
-    useNewUrlParser: true,
-    useCreateIndex: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useNewUrlParser: true
   },
   () => {
     console.log("Connected to MongoDB database.");

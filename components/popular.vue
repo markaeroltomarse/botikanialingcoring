@@ -11,7 +11,7 @@
       <div class="listprod" v-else>
           <div 
             class="p-3 shadow-sm rounded bg-white"
-            v-for="item in items"
+            v-for="item in resultItems"
             :key="item._id"
           >
               <div v-if="item.image" class="p-5 img" :style="`background-image:url('${item.image + ' '}');`">
@@ -102,8 +102,7 @@ export default {
         },
 
         getSearched(data) {
-            
-            this.resultItems = [...data]
+            this.resultItems = data
         },
 
         getbestProducts() {
@@ -114,8 +113,6 @@ export default {
             if (data) this.resultItems = null
         }
     },
-
-    
 }
 </script>
 

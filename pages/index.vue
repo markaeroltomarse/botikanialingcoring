@@ -49,7 +49,6 @@ export default {
 
   methods:{
     async fetchItems(){
-          
         //LINISIN ANG PAG ORDER NG ITEM DAHIL MAY NABAGO SA SCHEME NG ITEMS 
         let res = await this.$axios.get('/products/best-products')
         let arr = res.data.items
@@ -58,7 +57,6 @@ export default {
             item.image = await this.retrieveImg(item._id);
         }        
 
-        console.log('ITEMS', arr)
         this.qtycopy = arr
         this.items = arr
         this.reloaded = false
@@ -68,7 +66,6 @@ export default {
     copyQTY(){
         this.qtycopy = []
         for (const qty of this.preitems.qty) {
-            console.log(qty)
             this.qtycopy.push({date:qty.date, qty:qty.qty})
         } 
     },
@@ -79,7 +76,6 @@ export default {
 
         // Get the download URL
         let res = await retrieve.getDownloadURL()
-        console.log(filename, res)
         return res
     },
 

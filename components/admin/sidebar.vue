@@ -70,8 +70,6 @@
 export default {
     methods:{
         logout(){
-            console.log('DATA LOGGING OUT')
-            console.log( this.$auth.$storage.getCookie(process.env.AUTH_KEY))
             this.$auth.$storage.setCookie(process.env.AUTH_KEY, null, false)
             this.$auth.logout()
         },

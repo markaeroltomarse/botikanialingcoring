@@ -133,7 +133,6 @@ export default {
               })
               
               item.qty.reverse()
-              console.log(item.qty)
           })
 
           this.$store.state.cart = this.cart

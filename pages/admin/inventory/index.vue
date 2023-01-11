@@ -138,7 +138,6 @@ export default {
                 item.image = image
             }       
 
-            console.log('ITEMS', this.items)
             this.reloaded = false
             //this.copyQTY()
         },

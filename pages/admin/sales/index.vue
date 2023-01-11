@@ -112,7 +112,6 @@ export default {
             let total = 0
             let getTotal = (items) => {
                 let mappedToTotal = items.map(item => item.selectedqty * item.price)
-                console.log("MAPPED TOTAL", mappedToTotal)
                 total += mappedToTotal.reduce((a, b) => a + b, 0)
             }
             
@@ -148,7 +147,6 @@ export default {
             
             
 
-            console.log(events)
             return {
                 weekvaluewithlbl,
                 weekvalue, 

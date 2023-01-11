@@ -40,7 +40,7 @@ const getBestProducts = async (req, res) => {
     ).slice(0, 6);
 
     bestItems = [...best, ...dummyItems];
-    bestItem = bestItems.slice(0, 8);
+    bestItem = bestItems.slice(0, 4);
   }
 
   return { msg: "Best products", items: bestItems, result: true };
@@ -48,17 +48,15 @@ const getBestProducts = async (req, res) => {
 
 const searchProduct = async (req, res) => {
   const { take, page, keyword } = req.query;
-  const nameRegex = new RegExp(keyword, "i");
-  const items = await Items.find({ name: nameRegex })
-    .limit(+take)
-    .skip(+take * +page)
-    .sort({
-      name: "asc"
-    });
+  let items = (await Items.find().sort("asc")).filter(item => {
+    const result = item.name.toLowerCase().match(keyword.toLowerCase());
+    console.log(result);
+    return result !== null;
+  });
 
   return {
     msg: "",
-    items
+    items: items
   };
 };
 

@@ -111,9 +111,11 @@
                 prev-icon="mdi-skip-previous"
                 next-icon="mdi-skip-next"
                 color="error"
-                :min="item.qty.length > 0 ? item.qty[item.qty.length-1].date : null"
+                :min="moment().format('YYYY-MM-DD')"
+             
                 show-adjacent-months
             ></v-date-picker>
+            <!-- :max="item.qty.length > 0 ? item.qty[item.qty.length-1].date : null" -->
         </div>
 
         <div class="py-3 text-right">
@@ -135,7 +137,6 @@
 
 <script>
 import moment from 'moment'
-
 export default {
     data(){
         return {
@@ -223,6 +224,10 @@ export default {
         displayDate(date){
             return moment([...date.split('-').map(x=>+x)], 'YYYY-MM-DD').format('MMMM Do YYYY')
         },
+
+        moment() {
+            return moment()
+        }
     },
 
     watch:{

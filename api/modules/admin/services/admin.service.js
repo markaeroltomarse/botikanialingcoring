@@ -23,8 +23,6 @@ const getItems = async (req, res) => {
 };
 
 const updateQuantity = async (req, res) => {
-  console.log(req.body);
-
   const { _id, items } = req.body;
   for (const item of items) {
     await Items.updateOne(
@@ -40,8 +38,6 @@ const updateQuantity = async (req, res) => {
 };
 
 const deleteItem = async (req, res) => {
-  console.log(req.body);
-
   await Items.remove({ _id: req.body.item._id });
 
   return {
@@ -52,7 +48,6 @@ const deleteItem = async (req, res) => {
 
 const Sales = async (req, res) => {
   let days = getCurrentWeek();
-  console.log(days);
   let orders = await Orders.find({ delivered: true });
   let items = await Items.find();
 

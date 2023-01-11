@@ -54,7 +54,6 @@ export default {
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         this.$store.state.firebase = firebase
-        console.log('FIREBASE MOUNTED', this.$store.state.firebase)
     },
   }
 }

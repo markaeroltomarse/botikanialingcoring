@@ -39,7 +39,6 @@ export const mutations = {
   },
 
   LOAD_TOASTER(state, data) {
-    console.log(data);
     if (!data) return;
     state.toasterError = data;
     setTimeout(() => {

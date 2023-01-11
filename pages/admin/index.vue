@@ -123,7 +123,6 @@ export default {
           let res = await this.$axios.get('/admin/orders')
 
           this.orders = res.data.orders
-          console.log("ORDERS", this.orders)
         }catch(err){
           console.log(err)
         }
