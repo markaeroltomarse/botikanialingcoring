@@ -28,6 +28,7 @@
     "npm": "^9.1.2",
     "nuxt": "^2.14.12",
     "uuid": "^8.2.0",
-    "v-calendar-scheduler": "^0.7.4"
+    "v-calendar-scheduler": "^0.7.4",
+    "vuex": "^3.6.2"
   }
 }
