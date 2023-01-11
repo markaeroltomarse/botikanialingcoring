@@ -35,7 +35,8 @@ app.use(
   cors({
     origin: [
       "https://traqrsystem.herokuapp.com/",
-      `http://localhost:${process.env.APP_PORT}`
+      `http://localhost:${process.env.APP_PORT}`,
+      "https://botikanialingcoring.vercel.app/"
     ],
     methods: ["POST", "GET", "PUT", "PATCH", "CREATE", "DELETE"],
     credentials: true

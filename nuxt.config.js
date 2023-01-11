@@ -72,7 +72,7 @@ export default {
     baseURL:
       (process.env.NODE_ENV !== "production"
         ? `http://localhost:${5000}/`
-        : `https://botikanialingcoring.herokuapp.com/`) + "api",
+        : `https://botikanialingcoring.vercel.app/`) + "api",
     APP_PORT: 5000
   },
 
