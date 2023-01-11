@@ -1,5 +1,5 @@
 import colors from "vuetify/es5/util/colors";
-import webpack from 'webpack'
+import webpack from "webpack";
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -98,7 +98,7 @@ export default {
       new webpack.LoaderOptionsPlugin({
         // test: /\.xxx$/, // may apply this only for some modules
         options: {
-          hashFunction: "xxhash64"
+          hashFunction: "sha256"
         }
       })
     ]
