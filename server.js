@@ -42,20 +42,15 @@ app.use(
   })
 );
 
-//authentications
-app.use("/api/authen", require("./modules/authen"));
-
-//admin
-app.use("/api/admin", require("./modules/admin"));
-
-//orders
-app.use("/api/orders", require("./modules/orders"));
-
-//products
-app.use("/api/products", require("./modules/products"));
+app.use("/api/authen", require("./api/modules/authen"));
+app.use("/api/admin", require("./api/modules/admin"));
+app.use("/api/orders", require("./api/modules/orders"));
+app.use("/api/products", require("./api/modules/products"));
 
 // Error handler
-const { errorHandler } = require("./common/exceptions/async-handler.exception");
+const {
+  errorHandler
+} = require("./api/common/exceptions/async-handler.exception");
 
 app.use(errorHandler);
 

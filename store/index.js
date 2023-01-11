@@ -3,9 +3,7 @@ export const strict = false;
 export const state = () => ({
   g_loader: false,
   firebase: null,
-
   cart: [],
-
   toasterError: ""
 });
 
@@ -49,3 +47,5 @@ export const mutations = {
     }, 5000);
   }
 };
+
+export const actions = {};
