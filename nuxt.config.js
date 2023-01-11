@@ -1,5 +1,5 @@
 import colors from "vuetify/es5/util/colors";
-
+import webpack from 'webpack'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -93,7 +93,16 @@ export default {
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    plugins: [
+      new webpack.LoaderOptionsPlugin({
+        // test: /\.xxx$/, // may apply this only for some modules
+        options: {
+          hashFunction: "xxhash64"
+        }
+      })
+    ]
+  },
   server: {
     port: 5000
   },
