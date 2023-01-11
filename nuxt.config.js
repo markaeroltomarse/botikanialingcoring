@@ -1,5 +1,4 @@
 import colors from "vuetify/es5/util/colors";
-import webpack from "webpack";
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -105,6 +104,6 @@ export default {
   },
   server: {
     port: 5000
-  },
-  serverMiddleware: [{ path: "", handler: "~/server.js" }]
+  }
+  // serverMiddleware: [{ path: "", handler: "~/server.js" }]
 };
